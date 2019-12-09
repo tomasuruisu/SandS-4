@@ -1,12 +1,8 @@
 package nl.hva.ict.se.sands;
 
-import extra.MinPQ;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /*
  * Original Huffman Compression algorithm taken from Huffman.java in Algorithms 4th edition.
@@ -16,6 +12,7 @@ public class HuffmanCompression {
     private final Integer firstCharCount = 1;  // First occurrence of a char
     private final int R = 256;                  // The radix
     char[] strArray;       // Converting given string to char array
+    private Node root;
 
     public HuffmanCompression(String text) {
         this.text = text;
@@ -51,7 +48,7 @@ public class HuffmanCompression {
      * @return the root of the compression tree.
      */
     Node getCompressionTree() {
-        return null;
+        return buildTrie();
     }
 
     /**
@@ -70,7 +67,7 @@ public class HuffmanCompression {
         HashMap<Character, Integer> map = charOccurrence();
 
         // priority queue to keep the weights organized
-        MinPQ<Node> pq = new MinPQ<>();
+        PriorityQueue<Node> pq = new PriorityQueue<>();
 
         System.out.println("If a blank character appears it is a TAB or a SPACE");
 
@@ -79,28 +76,33 @@ public class HuffmanCompression {
             System.out.println("Character: " + h.getKey() + "\toccurrences:\t" + map.get(h.getKey()));
 
             // create a node from the char
-            pq.insert(new Node(map.get(h.getKey()), h.getKey()));
+            pq.add(new Node(map.get(h.getKey()), h.getKey()));
         }
 
         // loop while there is multiple nodes in the queue
         // until the root is left
         while (pq.size() > 1) {
-            // node left
-            Node x = pq.delMin();
+            // left node
+            Node x = pq.peek();
+            pq.poll();
 
-            // node right
-            Node y = pq.delMin();
+            // right node
+            Node y = pq.peek();
+            pq.poll();
 
             // parent node to merge the small trees
             Node parent = new Node(x, y);
 
+            // define trie root
+            root = parent;
+
             // parent node goes back in the queue
-            pq.insert(parent);
+            pq.add(parent);
         }
 
-        System.out.println("The weight of the root is:" + pq.delMin().getWeight());
+        System.out.println("The weight of the root is:" + pq.peek().getWeight());
 
-        return pq.delMin();
+        return pq.poll();
     }
 
     private HashMap charOccurrence() {
