@@ -40,7 +40,7 @@ public class Main {
 		System.out.println("Amount of comparisons: " + boyermoore.getComparisonsForLastSearch());
 
 		//////
-		
+
 		System.out.println("----- REVERSE ALGORITHM -----");
 
 		isOriginal = false;
@@ -63,6 +63,10 @@ public class Main {
 		}
 
 		System.out.println("Amount of comparisons: " + boyermooreReverse.getComparisonsForLastSearch());
+
+		System.out.println("\n----- HUFFMAN COMPRESSION -----");
+		HuffmanCompression h = new HuffmanCompression(" !\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~	");
+		h.compress();
 	}
 
 }

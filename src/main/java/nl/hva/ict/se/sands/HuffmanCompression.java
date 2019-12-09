@@ -1,6 +1,9 @@
 package nl.hva.ict.se.sands;
 
+import extra.MinPQ;
+
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -9,16 +12,21 @@ import java.util.Scanner;
  * Original Huffman Compression algorithm taken from Huffman.java in Algorithms 4th edition.
  */
 public class HuffmanCompression {
-    private final String text;
+    private final String text;                  // Text input
+    private final Integer firstCharCount = 1;  // First occurrence of a char
+    private final int R = 256;                  // The radix
+    char[] strArray;       // Converting given string to char array
 
     public HuffmanCompression(String text) {
         this.text = text;
+        strArray = this.text.toCharArray();
     }
 
     public HuffmanCompression(InputStream input) {
         Scanner sc = new Scanner(input);
         sc.useDelimiter("\\Z"); // EOF marker
         text = sc.next();
+        strArray = this.text.toCharArray();
     }
 
     /**
@@ -34,6 +42,7 @@ public class HuffmanCompression {
      * @return
      */
     public String compress() {
+        buildTrie();
         return "";
     }
 
@@ -54,17 +63,52 @@ public class HuffmanCompression {
     Map<Character, String> getCodes() {
         return null;
     }
+    
+    private Node buildTrie(){
+
+        // get the occurences for the characters
+        HashMap<Character, Integer> map = charOccurrence();
+
+        // priority queue to keep the weights organized
+        MinPQ<Node> pq = new MinPQ<>();
+
+        System.out.println("If a blank character appears it is a TAB or a SPACE");
+
+        // for each char in the text
+        for (HashMap.Entry<Character, Integer> h : map.entrySet()) {
+            System.out.println("Character: " + h.getKey() + "\toccurrences:\t" + map.get(h.getKey()));
+
+            // create a node from the char
+            pq.insert(new Node(map.get(h.getKey()), h.getKey()));
+        }
+
+        // loop while there is multiple nodes in the queue
+        // until the root is left
+        while (pq.size() > 1) {
+            // node left
+            Node x = pq.delMin();
+
+            // node right
+            Node y = pq.delMin();
+
+            // parent node to merge the small trees
+            Node parent = new Node(x, y);
+
+            // parent node goes back in the queue
+            pq.insert(parent);
+        }
+
+        System.out.println("The weight of the root is:" + pq.delMin().getWeight());
+
+        return pq.delMin();
+    }
 
     private HashMap charOccurrence() {
 
         // Creating a HashMap containing char
         // as a key and occurrences as  a value
         HashMap<Character, Integer> charCountMap
-                = new HashMap<Character, Integer>();
-
-        // Converting given string to char array
-
-        char[] strArray = text.toCharArray();
+                = new HashMap<>();
 
         // checking each char of strArray
         for (char c : strArray) {
@@ -78,14 +122,9 @@ public class HuffmanCompression {
 
                 // If char is not present in charCountMap,
                 // putting this char to charCountMap with 1 as it's value
-                charCountMap.put(c, 1);
+                charCountMap.put(c, firstCharCount);
             }
         }
-
-        // Printing the charCountMap
-//        for (Map.Entry entry : charCountMap.entrySet()) {
-//            System.out.println(entry.getKey() + " " + entry.getValue());
-//        }
 
         return charCountMap;
 
