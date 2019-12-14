@@ -19,7 +19,7 @@ package extra;
 public class BoyerMoore {
     private final int R;     // the radix
     private int[] right;     // the bad-character skip array
-
+	private int comparisonCount = 0;
     private char[] pattern;  // store the pattern as a character array
     private String pat;      // or as a string
 
@@ -69,12 +69,14 @@ public class BoyerMoore {
      *         in the text string; n if no such match
      */
     public int search(String txt) {
+		comparisonCount = 0;
         int m = pat.length();
         int n = txt.length();
         int skip;
         for (int i = 0; i <= n - m; i += skip) {
             skip = 0;
             for (int j = m-1; j >= 0; j--) {
+				comparisonCount++;
                 if (pat.charAt(j) != txt.charAt(i+j)) {
                     skip = Math.max(1, j - right[txt.charAt(i+j)]);
                     break;
@@ -95,12 +97,14 @@ public class BoyerMoore {
      *         in the text string; n if no such match
      */
     public int search(char[] text) {
+		comparisonCount = 0;
         int m = pattern.length;
         int n = text.length;
         int skip;
         for (int i = 0; i <= n - m; i += skip) {
             skip = 0;
             for (int j = m-1; j >= 0; j--) {
+				comparisonCount++;
                 if (pattern[j] != text[i+j]) {
                     skip = Math.max(1, j - right[text[i+j]]);
                     break;
@@ -110,6 +114,15 @@ public class BoyerMoore {
         }
         return n;                       // not found
     }
+
+	/**
+	 * Returns the number of character compared during the last search.
+	 *
+	 * @return the number of character comparisons during the last search.
+	 */
+	public int getComparisonsForLastSearch() {
+		return comparisonCount;
+	}
 
 
     /**

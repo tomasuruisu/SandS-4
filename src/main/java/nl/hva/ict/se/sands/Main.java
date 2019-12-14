@@ -5,6 +5,10 @@
  */
 package nl.hva.ict.se.sands;
 
+import com.google.common.base.Stopwatch;
+
+import extra.BoyerMoore;
+
 /**
  *
  * @author Thomas & Donovan
@@ -12,15 +16,17 @@ package nl.hva.ict.se.sands;
 public class Main {
 
 	public static void main(String[] args) {
+
 		String pattern = "einah";
 		String text = "needleinahaystackneedleinahaystackneedleinahaystackneedleinahaystackneedleinahaystack";
-		boolean isOriginal = true;
 		int offset;
 
 		System.out.println("----- ORIGINAL ALGORITHM -----");
 
-		BackwardsSearch boyermoore = new BackwardsSearch(pattern, isOriginal);
-		offset = boyermoore.findLocationOriginal(pattern, text);
+		Stopwatch stopwatch = Stopwatch.createStarted();
+
+		BoyerMoore boyermoore = new BoyerMoore(pattern);
+		offset = boyermoore.search(text);
 
 		// print results
 		System.out.println("text:    " + text);
@@ -36,16 +42,11 @@ public class Main {
 		} else {
 			System.out.println("pattern not found: " + offset);
 		}
-
-		System.out.println("Amount of comparisons: " + boyermoore.getComparisonsForLastSearch());
-
-		//////
 		
 		System.out.println("----- REVERSE ALGORITHM -----");
 
-		isOriginal = false;
-		BackwardsSearch boyermooreReverse = new BackwardsSearch(pattern, isOriginal);
-		offset = boyermooreReverse.findLocation(pattern, text);
+		BackwardsSearch boyermooreReverse = new BackwardsSearch(pattern);
+		offset = boyermooreReverse.findLocation(text);
 
 		// print results
 		System.out.println("text:    " + text);
