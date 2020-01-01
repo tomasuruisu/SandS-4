@@ -1,7 +1,8 @@
 package nl.hva.ict.se.sands;
 
-/*
+/**
 * Original Boyer Moore algorithm taken from BoyerMoore.java in Algorithms 4th edition.
+* Modified by Thomas and Donovan
 */
 public class BackwardsSearch {
 
@@ -29,11 +30,9 @@ public class BackwardsSearch {
 	}
 
 	/**
-	 * Deze doet het volgens hoe de opdracht het uitgelegd heeft.
-	 *
-	 * @param needle
-	 * @param haystack
-	 * @return
+	 * find the location of the needle in the given haystack
+	 * @param haystack text to search in
+	 * @return index of the first character of the needle in the haystack
 	 */
 	int findLocation(String haystack) {
 		// reset comparison count to 0 in case there was a previous comparison
@@ -42,7 +41,7 @@ public class BackwardsSearch {
 		int needleLength = this.pat.length();
 		int haystackLength = haystack.length();
 
-		// instantiate step skip 0
+		// instantiate step skip
 		int skip;
 
 		// walk through haystack backwards incremented by 'skip' amount
@@ -51,8 +50,7 @@ public class BackwardsSearch {
 			skip = 0;
 			// walk through needle starting from the end and compare to haystack
 			for (int j = 0; j <= needleLength - 1; j++) {
-				//System.out.println("Comparing " + this.pat.charAt(j) + " to " + haystack.charAt(i + j));
-
+				
 				// the loop will now compare needle and haystack, so add 1 to comparisonCount
 				comparisonCount++;
 
@@ -60,7 +58,6 @@ public class BackwardsSearch {
 				if (this.pat.charAt(j) != haystack.charAt(i + j)) {
 					// set skip and break out of loop to move to the next haystack position
 					skip = Math.min(needleLength, left[haystack.charAt(i + j)]);
-					//System.out.println("Set skip to " + skip);
 					break;
 				}
 				// go back to the top and check if (first char + 1) is not at haystack position

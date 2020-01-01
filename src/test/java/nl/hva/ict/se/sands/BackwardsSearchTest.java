@@ -77,6 +77,7 @@ public class BackwardsSearchTest {
 		long boyermooreSearchTimeElapsed = stopwatch.elapsed(MILLISECONDS);
 
 		// both algorithms search for needle which isn't in the text file
+		System.out.println("--- both algorithms search for 'needle' ---");
 		System.out.print("Reverse search vs. Original search: ");
 		System.out.print(reverseSearchTimeElapsed + "ms");
 		System.out.println(" < " + boyermooreSearchTimeElapsed + "ms");
@@ -111,7 +112,8 @@ public class BackwardsSearchTest {
 		long boyermooreSearchTimeElapsed = stopwatch.elapsed(MILLISECONDS);
 
 		// both algorithms search for needle which isn't in the text file
-		System.out.print("Reverse search vs. Original search: ");
+		System.out.println("--- both algorithms search for needle which isn't in the text file ---");
+		System.out.print("Reverse search vs. Original search (no needle): ");
 		System.out.print(reverseSearchTimeElapsed + "ms");
 		System.out.println(" < " + boyermooreSearchTimeElapsed + "ms");
 
@@ -132,7 +134,7 @@ public class BackwardsSearchTest {
 		// Use the original BoyerMoore algorithm
 		int index2 = searchEngineOriginal.search(message);
 
-		// both algorithms search for needle which isn't in the text file
+		// both algorithms search for a needle and compare the amount of comparisons
 		System.out.print("Reverse search Comparisons vs. Original search Comparisons: ");
 		System.out.print(searchEngine.getComparisonsForLastSearch());
 		System.out.println(" < " + searchEngineOriginal.getComparisonsForLastSearch());
