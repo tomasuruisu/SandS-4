@@ -1,6 +1,8 @@
 package nl.hva.ict.se.sands;
 
 
+import com.sun.xml.internal.fastinfoset.util.CharArray;
+
 import java.io.InputStream;
 import java.util.*;
 
@@ -13,10 +15,13 @@ public class HuffmanCompression {
     private final int R = 256;                  // The radix
     char[] strArray;       // Converting given string to char array
     private Node root;
+    public HashMap<Character, String> codeTable;
+    public String bitString = "";
 
     public HuffmanCompression(String text) {
         this.text = text;
         strArray = this.text.toCharArray();
+        compress();
     }
 
     public HuffmanCompression(InputStream input) {
@@ -24,6 +29,7 @@ public class HuffmanCompression {
         sc.useDelimiter("\\Z"); // EOF marker
         text = sc.next();
         strArray = this.text.toCharArray();
+        compress();
     }
 
     /**
@@ -31,7 +37,20 @@ public class HuffmanCompression {
      * @return the compression ratio.
      */
     public double getCompressionRatio() {
-        return 0.0;
+        // get the occurences for the characters
+        HashMap<Character, Integer> map = charOccurrence();
+        double huffmanBits = 0;
+        double normalRatio = 0;
+
+
+        for (HashMap.Entry<Character, String> h : codeTable.entrySet()) {
+            huffmanBits += h.getValue().length() * map.get(h.getKey());
+            normalRatio += map.get(h.getKey()) * 8;
+
+            }
+        huffmanBits = huffmanBits / normalRatio;
+
+        return huffmanBits;
     }
 
     /**
@@ -40,7 +59,10 @@ public class HuffmanCompression {
      */
     public String compress() {
         buildTrie();
-        return "";
+        buildCodes(getCompressionTree());
+        bitString = "";
+        writeTrie(strArray);
+        return bitString;
     }
 
     /**
@@ -48,7 +70,7 @@ public class HuffmanCompression {
      * @return the root of the compression tree.
      */
     Node getCompressionTree() {
-        return buildTrie();
+        return root;
     }
 
     /**
@@ -58,9 +80,45 @@ public class HuffmanCompression {
      * @return the Huffman codes
      */
     Map<Character, String> getCodes() {
-        return null;
+        return codeTable;
     }
-    
+
+    /**
+     * builds the compression codes, assigns the code map and prints the characters with their individual codes.
+     * @param root
+     */
+    private void buildCodes(Node root) {
+        HashMap<Character, String> map = new HashMap<>();
+        buildRecursive(map, root, "");
+
+        //*
+
+        //*
+
+        codeTable = map;
+    }
+
+    /**
+     * recursively builds the compression codes.
+     * @param map
+     * @param x
+     * @param s
+     */
+    private void buildRecursive(HashMap<Character, String> map, Node x, String s) {
+
+        if (x.isLeaf()) {
+            map.put(x.getCharacter(), s);
+            return;
+        }
+            buildRecursive(map, x.getLeft(), s + '0');
+            buildRecursive(map, x.getRight(), s + '1');
+
+    }
+
+    /**
+     * builds the compression tree.
+     * @return the root of the compression tree
+     */
     private Node buildTrie(){
 
         // get the occurences for the characters
@@ -69,11 +127,11 @@ public class HuffmanCompression {
         // priority queue to keep the weights organized
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
-        System.out.println("If a blank character appears it is a TAB or a SPACE");
+        //*
 
         // for each char in the text
         for (HashMap.Entry<Character, Integer> h : map.entrySet()) {
-            System.out.println("Character: " + h.getKey() + "\toccurrences:\t" + map.get(h.getKey()));
+            //*
 
             // create a node from the char
             pq.add(new Node(map.get(h.getKey()), h.getKey()));
@@ -83,15 +141,15 @@ public class HuffmanCompression {
         // until the root is left
         while (pq.size() > 1) {
             // left node
-            Node x = pq.peek();
+            Node l = pq.peek();
             pq.poll();
 
             // right node
-            Node y = pq.peek();
+            Node r = pq.peek();
             pq.poll();
 
-            // parent node to merge the small trees
-            Node parent = new Node(x, y);
+            // merge the nodes into parent
+            Node parent = new Node(l, r);
 
             // define trie root
             root = parent;
@@ -100,15 +158,19 @@ public class HuffmanCompression {
             pq.add(parent);
         }
 
-        System.out.println("The weight of the root is:" + pq.peek().getWeight());
+        //*
 
         return pq.poll();
     }
 
-    private HashMap charOccurrence() {
+    /**
+     * counts the character occurence from text.
+     * @return hashmap with character occurences
+     */
+    public HashMap charOccurrence() {
 
-        // Creating a HashMap containing char
-        // as a key and occurrences as  a value
+        // Creating a HashMap containing a char
+        // as a key and the occurrences as value
         HashMap<Character, Integer> charCountMap
                 = new HashMap<>();
 
@@ -130,6 +192,15 @@ public class HuffmanCompression {
 
         return charCountMap;
 
+    }
+
+    /**
+     * Writes a bitstring from the text in order using the code table.
+     */
+    private void writeTrie(char[] strArray) {
+        for (int i = 0; i < strArray.length; i++) {
+            bitString += codeTable.get(strArray[i]);
+        }
     }
 
 }
