@@ -16,7 +16,7 @@ public class BackwardsSearch {
 	 * @param pat the pattern string
 	 */
 	public BackwardsSearch(String pat) {
-		this.R = 128;
+		this.R = 256;
 		this.pat = pat;
 
 		// initialize the 'left' array

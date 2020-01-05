@@ -5,8 +5,6 @@
  */
 package nl.hva.ict.se.sands;
 
-import com.google.common.base.Stopwatch;
-
 import extra.BoyerMoore;
 
 /**
@@ -22,8 +20,6 @@ public class Main {
 		int offset;
 
 		System.out.println("----- ORIGINAL ALGORITHM -----");
-
-		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		BoyerMoore boyermoore = new BoyerMoore(pattern);
 		offset = boyermoore.search(text);
@@ -42,7 +38,10 @@ public class Main {
 		} else {
 			System.out.println("pattern not found: " + offset);
 		}
-		
+
+		System.out.println("Amount of comparisons: " + boyermoore.getComparisonsForLastSearch());
+
+		//////
 		System.out.println("----- REVERSE ALGORITHM -----");
 
 		BackwardsSearch boyermooreReverse = new BackwardsSearch(pattern);
@@ -64,6 +63,11 @@ public class Main {
 		}
 
 		System.out.println("Amount of comparisons: " + boyermooreReverse.getComparisonsForLastSearch());
+
+		System.out.println("\n----- HUFFMAN COMPRESSION -----");
+		String toCompress = "aaaaaaaaaakll";
+		HuffmanCompression h = new HuffmanCompression(toCompress);
+		System.out.println(toCompress + " compressed to " + h.compress());
 	}
 
 }

@@ -42,4 +42,43 @@ public class HuffmanCompressionTest {
         assertEquals(0.125,compressor.getCompressionRatio(), 0.0001);
     }
 
+
+    /**
+     * Added test methods
+     */
+    @Test
+    public void sortLowerWeightFirst() {
+        compressor = new HuffmanCompression("aba");
+        String b = compressor.getCodes().get('b');
+
+        // b only occurs once, thus should come first.
+        assertEquals("0",b);
+    }
+
+    @Test
+    public void checkAlphabeticalSort() {
+        // Both are leafs and weight is equal, alphabetical comes first.
+        compressor = new HuffmanCompression("cb");
+        String b = compressor.getCodes().get('b');
+
+        assertEquals("0",b);
+    }
+
+    @Test
+    public void sortLeafFirst() {
+        // Leaf comes first
+        compressor = new HuffmanCompression("cbcbaa");
+        String c = compressor.getCodes().get('c');
+
+        // PriorityQueue will first check a & b.
+        assertEquals("0",c);
+    }
+
+    @Test
+    public void checkBitStringOrder() {
+        compressor = new HuffmanCompression("aba");
+
+        assertEquals("101",compressor.bitString);
+    }
+
 }

@@ -20,9 +20,35 @@ public class Node implements Comparable<Node> {
         this.right = right;
     }
 
+    public Node() {
+    }
+
+    /**
+     * creates the right priority for in the queue
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Node o) {
-        return 0;
+
+        // if both are leafs and have equal weight, compare on character
+        if(isLeaf() && o.isLeaf() && this.weight == o.getWeight()){
+            return this.character.compareTo(o.getCharacter());
+        }
+
+        // leaf has priority
+        else if (isLeaf() && !o.isLeaf()) {
+            return -1;
+        } else if (!isLeaf() && o.isLeaf()) {
+            return 1;
+        }
+
+        // neither is a leaf
+        return this.weight - o.getWeight();
+    }
+
+    public boolean isLeaf(){
+        return left == null && right == null;
     }
 
     public Node getLeft() {
@@ -37,8 +63,16 @@ public class Node implements Comparable<Node> {
         return weight;
     }
 
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
     public Character getCharacter() {
         return character;
+    }
+
+    public void setCharacter(Character c) {
+        this.character = c;
     }
 
 }
