@@ -81,4 +81,12 @@ public class HuffmanCompressionTest {
         assertEquals("101",compressor.bitString);
     }
 
+    @Test
+    public void checkRootWeight() {
+        // Added 27 characters which should result in a root weight of 27
+        compressor = new HuffmanCompression("abcdefghijklmnopqrstuvwxyzz");
+
+        assertEquals(27,compressor.getCompressionTree().getWeight());
+    }
+
 }
