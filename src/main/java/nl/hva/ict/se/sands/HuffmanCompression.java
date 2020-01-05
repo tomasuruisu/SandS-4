@@ -18,6 +18,7 @@ public class HuffmanCompression {
     public HuffmanCompression(String text) {
         this.text = text;
         strArray = this.text.toCharArray();
+		compress();
     }
 
     public HuffmanCompression(InputStream input) {
@@ -25,6 +26,7 @@ public class HuffmanCompression {
         sc.useDelimiter("\\Z"); // EOF marker
         text = sc.next();
         strArray = this.text.toCharArray();
+		compress();
     }
 
     /**

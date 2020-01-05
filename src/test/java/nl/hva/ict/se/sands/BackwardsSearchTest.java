@@ -2,10 +2,11 @@ package nl.hva.ict.se.sands;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -20,7 +21,7 @@ public class BackwardsSearchTest {
     protected BackwardsSearch searchEngine;
 	protected BoyerMoore searchEngineOriginal;
 
-    @Before
+    @BeforeEach
     public void setup() {
         searchEngine = new BackwardsSearch("needle");
 		searchEngineOriginal = new BoyerMoore("needle");
